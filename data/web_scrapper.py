@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import re
 import time
-session = requests.Session()
+session = requests.Session() 
 
 class ScrapeRt(): 
     '''
@@ -40,6 +40,8 @@ class ScrapeRt():
         self.scraping_limit = scraping_limit
         self.write_data = write_data
         self.review_df = None
+        print('Scrapped Initiated')
+        print(f'Scrapping data for: {self.movie_title}')
         
     def scrape_reviews(self):
         '''
@@ -78,7 +80,7 @@ class ScrapeRt():
             time.sleep(.1)
             pages_scraped += 1
             if pages_scraped % 10 == 0: 
-                print(f'pages scraped: {pages_scraped}')
+                print(f'Pages scraped: {pages_scraped}')
 #         print(review_data)
         self.review_df =  pd.json_normalize(review_data)
         return 
@@ -102,7 +104,7 @@ class ScrapeRt():
         If self.write_data == True, a pickled dataframe will be written
         '''
         if self.write_data == True:
-            self.review_df.to_pickle(f'{movie_title}_data.pkl')
+            self.review_df.to_pickle(f'{self.movie_title}_data.pkl')
     
     def run_for_reviews(self):
         '''
