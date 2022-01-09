@@ -52,7 +52,20 @@ def summarize_text(
     max_length=150,
     min_length=50):
     '''
-    In progress
+    Summarizes text using initiated torch.pipeline model
+    Args: 
+        summarizer: model
+            text summarization model 
+        input_text: str 
+            text to be summarized
+        char_limit: int
+            len of text fed into model 
+        max_length: int
+            max len of the summary returned
+        min_length= int
+            min len of the summary returned
+    Returns
+        Summary text 
     '''
     processed_text = input_text[:char_limit] # gpu taps out around this length string 
     print(f'Input text len: {len(processed_text)} \n ')
@@ -66,7 +79,11 @@ def summarize_text(
 
 def execute():
     '''
-    In progress
+    Executes main function  by running scrapper.run_for_reviews() & 
+    then summarize_text()
+    
+    Returns 
+        dataframe of scrapped data and summary text
     '''
     df = scrapper.run_for_reviews()
     print(scrapper.movie_title)
