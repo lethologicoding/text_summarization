@@ -5,6 +5,8 @@ import re
 import time
 import sys 
 import os
+from nltk import sent_tokenize
+import textwrap
 from transformers import pipeline
 sys.path.extend(
     [(os.path.abspath(os.path.dirname('__file__')) + "/..")]
@@ -16,7 +18,7 @@ argparser = argparse.ArgumentParser(description='Process hyper-parameters')
 argparser.add_argument('--movie_title', type=str, default='', help='movie title')
 argparser.add_argument('--scraping_limit', type=int, default=20, help='scraping limit')
 argparser.add_argument('--reviewer', type=str, default='user', help='reviwer type')
-argparser.add_argument('--char_limit', type=int, default=20000, help='char limit summary input')
+argparser.add_argument('--char_limit', type=int, default=1000, help='char limit summary input')
 argparser.add_argument('--max_length', type=int, default=150, help='char limit summary output')
 args = argparser.parse_args()
 
@@ -26,8 +28,6 @@ print(f'Number of total reviews attempted to scrape: {args.scraping_limit}')
 print(f'Reviews from: {args.reviewer}')
 print(f'Character limit for summary text: {args.char_limit}')
 print('\n ---------------------')
-# print(args.max_length)
-
 
 #Initializing web scrapper 
 scrapper = rt(
@@ -47,8 +47,8 @@ summarizer = pipeline(
 
 def summarize_text(
     summarizer,
-    input_text, 
-    char_limit = int(), # tested in notebook for tf-5 CUDA mem max limit
+    input_text = str, 
+    char_limit = int, # tested in notebook for tf-5 CUDA mem max limit
     max_length=150,
     min_length=50):
     '''
