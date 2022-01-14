@@ -40,6 +40,7 @@ class ScrapeRt():
         self.scraping_limit = scraping_limit
         self.write_data = write_data
         self.review_df = None
+        print('\n --------------------- \n ')
         print('Scrapped Initiated')
         print(f'Scrapping data for: {self.movie_title}')
         
