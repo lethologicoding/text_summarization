@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 import pandas as pd
 import requests
 import re
@@ -16,26 +17,20 @@ from data.web_scrapper import ScrapeRt as rt
 # Adding arguments to customize CLI 
 argparser = argparse.ArgumentParser(description='Process hyper-parameters')
 argparser.add_argument('--movie_title', type=str, default='', help='movie title')
-argparser.add_argument('--scraping_limit', type=int, default=20, help='scraping limit')
+argparser.add_argument('--scraping_limit', type=int, default=50, help='scraping limit')
 argparser.add_argument('--reviewer', type=str, default='user', help='reviwer type')
-argparser.add_argument('--char_limit', type=int, default=1000, help='char limit summary input')
-argparser.add_argument('--max_length', type=int, default=150, help='char limit summary output')
+argparser.add_argument('--char_limit', type=int, default=1500, help='char limit summary input')
+argparser.add_argument('--max_length', type=int, default=200, help='char limit summary output')
 args = argparser.parse_args()
 
+print('\n ---------------------')
 print('Scraping Details: ')
 print(f'Movie title: {args.movie_title}')
 print(f'Number of total reviews attempted to scrape: {args.scraping_limit}')
 print(f'Reviews from: {args.reviewer}')
 print(f'Character limit for summary text: {args.char_limit}')
-print('\n ---------------------')
 
 #Initializing web scrapper 
-scrapper = rt(
-    movie_title = args.movie_title ,
-    scraping_limit= args.scraping_limit, 
-    reviewer = args.reviewer
-)
-
 # Initializing text summarizer
 summarizer = pipeline(
     "summarization", 
@@ -68,7 +63,7 @@ def summarize_text(
         Summary text 
     '''
     processed_text = input_text[:char_limit] # gpu taps out around this length string 
-    print(f'Input text len: {len(processed_text)} \n ')
+#     print(f'Input text len: {len(processed_text)} \n ')
     summary_text = summarizer(
         processed_text,
         max_length=args.max_length,
@@ -77,26 +72,54 @@ def summarize_text(
 
     return summary_text
 
+def generate_sample_dfs(dataframe):
+    '''
+    Doc-In-Progess 
+    '''
+    num_random_reviews = len(dataframe)//3
+    samp_range = len(dataframe) //num_random_reviews
+    df_shuff = dataframe.reindex(np.random.permutation(dataframe.index))
+
+    df_dict = {}
+    for i in range(samp_range): 
+        df_dict[i+1] = df_shuff[i*num_random_reviews:(i+1)*num_random_reviews]
+
+    return df_dict
+
 def execute():
     '''
-    Executes main function  by running scrapper.run_for_reviews() & 
+    Executes main function by running scrapper.run_for_reviews() & 
     then summarize_text()
     
     Returns 
         dataframe of scrapped data and summary text
     '''
-    df = scrapper.run_for_reviews()
-    print(scrapper.movie_title)
-    reviews = '. '.join([i for i in df.review.values])
-    summary = summarize_text(
-        summarizer, 
-        reviews,
-        char_limit= args.char_limit                  
-    )
     print('\n --------------------- \n ')
-    print(summary)
-
-    return df, summary
+    print('\n **Started Reviewing**') 
+    scrapper = rt(
+        movie_title = args.movie_title ,
+        scraping_limit= args.scraping_limit, 
+        reviewer = args.reviewer
+    )
+    df = scrapper.run_for_reviews()
+    dict_data = generate_sample_dfs(df)
+    summaries = []
+    for i in range(1, 4):
+        df_sample = dict_data[i]
+        reviews = '. '.join([i for i in df_sample.review.values])
+        reviews = textwrap.wrap(reviews, args.char_limit)[0] # gpu taps out around this length string 
+        summary = summarize_text(
+            summarizer, 
+            reviews,
+            char_limit= args.char_limit                  
+        )
+        print('\n --------------------- \n ')
+        print(summary)
+        summaries.append(summary)
+    print('\n --------------------- \n ')
+    print('\n **Completed Reviewing**') 
+    print('\n --------------------- \n ')
+    return dict_data, summaries
 
 if __name__ == "__main__":
     execute()
