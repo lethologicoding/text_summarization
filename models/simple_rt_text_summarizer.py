@@ -17,10 +17,11 @@ from data.web_scrapper import ScrapeRt as rt
 # Adding arguments to customize CLI 
 argparser = argparse.ArgumentParser(description='Process hyper-parameters')
 argparser.add_argument('--movie_title', type=str, default='', help='movie title')
-argparser.add_argument('--scraping_limit', type=int, default=50, help='scraping limit')
+argparser.add_argument('--scraping_limit', type=int, default=30, help='scraping limit')
 argparser.add_argument('--reviewer', type=str, default='user', help='reviwer type')
 argparser.add_argument('--char_limit', type=int, default=1500, help='char limit summary input')
 argparser.add_argument('--max_length', type=int, default=200, help='char limit summary output')
+argparser.add_argument('--num_sum', type=int, default=3, help='char limit summary output')
 args = argparser.parse_args()
 
 print('\n ---------------------')
@@ -29,6 +30,7 @@ print(f'Movie title: {args.movie_title}')
 print(f'Number of total reviews attempted to scrape: {args.scraping_limit}')
 print(f'Reviews from: {args.reviewer}')
 print(f'Character limit for summary text: {args.char_limit}')
+print(f'Number of summaries to be told: {args.num_sum}')
 
 #Initializing web scrapper 
 # Initializing text summarizer
@@ -48,6 +50,7 @@ def summarize_text(
     min_length=50):
     '''
     Summarizes text using initiated torch.pipeline model
+    
     Args: 
         summarizer: model
             text summarization model 
@@ -72,13 +75,24 @@ def summarize_text(
 
     return summary_text
 
-def generate_sample_dfs(dataframe):
+def generate_sample_dfs(dataframe , num_sum = 3):
     '''
-    Doc-In-Progess 
+    Generates n random samples of review dataframe for multiple more 
+    appropriately lengthed dataframes
+    
+    Args: 
+        datafrane: pd.df
+            input df to be split into multiple randomly sampled dfs  
+        num_sum: int 
+            text to be summarized
+    Returns
+        dictionary with df number as key and dataframe as value 
+    
     '''
-    num_random_reviews = len(dataframe)//3
+    num_random_reviews = len(dataframe)//num_sum
     samp_range = len(dataframe) //num_random_reviews
     df_shuff = dataframe.reindex(np.random.permutation(dataframe.index))
+ 
 
     df_dict = {}
     for i in range(samp_range): 
@@ -102,9 +116,9 @@ def execute():
         reviewer = args.reviewer
     )
     df = scrapper.run_for_reviews()
-    dict_data = generate_sample_dfs(df)
+    dict_data = generate_sample_dfs(df, args.num_sum)
     summaries = []
-    for i in range(1, 4):
+    for i in range(1, args.num_sum+1):
         df_sample = dict_data[i]
         reviews = '. '.join([i for i in df_sample.review.values])
         reviews = textwrap.wrap(reviews, args.char_limit)[0] # gpu taps out around this length string 
