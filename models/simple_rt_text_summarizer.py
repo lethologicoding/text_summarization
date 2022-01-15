@@ -21,7 +21,7 @@ argparser.add_argument('--scraping_limit', type=int, default=30, help='scraping 
 argparser.add_argument('--reviewer', type=str, default='user', help='reviwer type')
 argparser.add_argument('--char_limit', type=int, default=1500, help='char limit summary input')
 argparser.add_argument('--max_length', type=int, default=200, help='char limit summary output')
-argparser.add_argument('--num_sum', type=int, default=3, help='char limit summary output')
+argparser.add_argument('--num_sum', type=int, default=3, help='number of summaries requested')
 args = argparser.parse_args()
 
 print('\n ---------------------')
