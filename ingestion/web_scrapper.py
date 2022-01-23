@@ -105,7 +105,7 @@ class ScrapeRt():
         If self.write_data == True, a pickled dataframe will be written
         '''
         if self.write_data == True:
-            self.review_df.to_pickle(f'{self.movie_title}_data.pkl')
+            self.review_df.to_pickle(f'data/{self.movie_title}_data.pkl')
     
     def run_for_reviews(self):
         '''
