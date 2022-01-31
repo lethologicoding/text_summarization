@@ -9,7 +9,7 @@ def run_umap(data = None):
     '''
     Runs umap dimensionality reduction on data
     '''    
-    return umap.UMAP(random_state=42).fit_transform(data)
+    return umap.UMAP(random_state=42, n_neighbors = 50).fit_transform(data)
 
 def get_optimal_k(df=pd.DataFrame, k_limit=30):
     '''
