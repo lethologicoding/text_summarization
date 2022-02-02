@@ -1,4 +1,5 @@
 import argparse
+from asyncore import loop
 import numpy as np
 import sys 
 import os
@@ -90,9 +91,10 @@ def execute():
     labels = DimReduction.run_gmm(num_clusters=best_num, data=umap_embeddings)
     df['cluster_label'] = labels
     print(f'Number of topics found in reviews: {best_num}')
-    ## clustering using KMeans 
+    loop_order = df['cluster_label'].value_counts().index.to_list() # to start with most predominant topics 
+
     summaries = []
-    for i in range(best_num):
+    for i in loop_order:
         df_sample = df[df['cluster_label'] == i].copy()
         reviews = '. '.join([i for i in df_sample.review.values])
         reviews = textwrap.wrap(reviews, args.char_limit)[0] # gpu taps out around this length string 
@@ -102,6 +104,10 @@ def execute():
             reviews,
         )
         print('\n --------------------- \n ')
+        len_stats = np.round(len(df_sample)/len(df)*100, 2)
+        rating_stats = np.round(df_sample['rating'].mean(), 2) 
+        print(f'Topic had {len_stats}% reviews with an avg. rating of: {rating_stats}. \n')
+        print('Summary of topic-based reviews: \n ')
         print(summary)
         summaries.append(summary)
     print('\n --------------------- \n ')
