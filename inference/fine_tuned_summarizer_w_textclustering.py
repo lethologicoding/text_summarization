@@ -19,8 +19,8 @@ argparser = argparse.ArgumentParser(description='Process hyper-parameters')
 argparser.add_argument('--movie_title', type=str, default='', help='movie title')
 argparser.add_argument('--scraping_limit', type=int, default=30, help='scraping limit')
 argparser.add_argument('--reviewer', type=str, default='user', help='reviwer type')
-argparser.add_argument('--char_limit', type=int, default=2500, help='char limit summary input')
-argparser.add_argument('--max_length', type=int, default=200, help='char limit summary output')
+argparser.add_argument('--char_limit', type=int, default=30000, help='char limit summary input')
+argparser.add_argument('--max_length', type=int, default=100, help='char limit summary output')
 # argparser.add_argument('--num_reviews', type=int, default=3, help='number of summaries requested')
 args = argparser.parse_args()
 
@@ -34,12 +34,11 @@ print(f'Character limit for summary text: {args.char_limit}')
 
 #Initializing web scrapper 
 # Initializing text summarizer
+#NOTE: should come from a config file 
 MODEL_NAME = 't5-base'
 tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
 T5_model = T5FineTuner()
-# should come from a config file 
-trained_model = T5_model.load_from_checkpoint('lightning_logs\\fine_tuning_text_summarizer_xsumdata_v_0_1\\version_1\\checkpoints\\epoch=4-step=4999.ckpt'
-)
+trained_model = T5_model.load_from_checkpoint('..\\training\\lightning_logs\\fine_tuning_text_summarizer_rt_v_0_2\\version_0\\checkpoints\\epoch=19-step=4319.ckpt')
 
 class Inference():
     def summarize(trained_model, tokenizer, text): 
