@@ -10,6 +10,7 @@ sys.path.extend(
 )
 #custom imports 
 from ingestion.web_scrapper import ScrapeRt as rt
+from ingestion.web_scrapper import google_movie
 from T5FineTunedModel import T5FineTuner
 import DimReduction
 import TextEmbeddings
@@ -76,8 +77,11 @@ def execute():
     '''
     print('\n --------------------- \n ')
     print('\n **Started Reviewing**') 
+    print('Googling movie for rotten tomatoes url')
+    googled_movie_url = google_movie(args.movie_title)
+    print(f'Search found for {googled_movie_url}')
     scrapper = rt(
-        movie_title = args.movie_title ,
+        movie_title = googled_movie_url,
         scraping_limit= args.scraping_limit, 
         reviewer = args.reviewer
     )
