@@ -2,8 +2,18 @@ import pandas as pd
 import requests
 import re
 import time
+from googlesearch import search
 session = requests.Session() 
 
+def google_movie(movie= str) -> str:
+    '''
+    Uses google search to find rotten tomatoes movie url
+    '''
+    query = f'{movie} rotten tomatoes'
+    search_result = [i for i in search(query, num=1, stop=1, pause=2)][0]
+    movie_title_on_rt = search_result.split('m/')[-1]
+    return movie_title_on_rt
+    
 class ScrapeRt(): 
     '''
     Instance scrapes rotten tomatoes reviews
