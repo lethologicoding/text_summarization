@@ -280,4 +280,3 @@ dependencies:
     - werkzeug==2.0.2
     - wheel==0.37.1
     - zipp==3.7.0
-prefix: C:\Users\megra\anaconda3\envs\textsum_env
