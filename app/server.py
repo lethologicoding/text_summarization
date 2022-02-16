@@ -1,5 +1,9 @@
 import requests
 import argparse
+import json
+import pandas as pd
+
+import streamlit as st
 
 
 # Adding arguments to customize CLI 
@@ -28,5 +32,7 @@ payload = {
 }
 
 
-response = requests.post('http://127.0.0.1:8000/predict', json=payload)
-print(response.content)
+response=requests.post('http://127.0.0.1:8000/predict', json=payload)
+decoded_output=response.content.decode('UTF-8')
+output=json.loads(decoded_output)
+print(output)

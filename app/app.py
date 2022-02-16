@@ -67,3 +67,6 @@ def main(data: request_body):
         rating = np.round(df_sample['rating'].mean(), 2) 
         summary_dict[f'summary{i}'] = {'num_reviews': len_stats, 'rating': rating, 'summary': summary}
     return summary_dict 
+
+if __name__ == '__main__':
+    uvicorn.run(app)
