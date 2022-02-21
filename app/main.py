@@ -20,7 +20,7 @@ import inference.Summarizer as Summarizer
 
 app = FastAPI()
 
-class request_body(BaseModel):
+class Data(BaseModel):
     '''takes in input from API'''
     movie_title: str
     scraping_limit: int
@@ -28,8 +28,13 @@ class request_body(BaseModel):
     char_limit: int
     max_length: int
 
+@app.get("/")
+@app.get("/home")
+def read_home():
+    return {'message': 'sys is good baby'}
+
 @app.post('/predict')
-def main(data: request_body):
+def main(data: Data):
     '''
     Executes main function by running: 
     1. googled_movie_url
@@ -42,6 +47,7 @@ def main(data: request_body):
     Returns 
         dictionary summaries and relevant data (num reviews, rating, summary)
     '''
+    # return data.movie_title, data.scraping_limit, data.reviewer
     googled_movie_url = google_movie(data.movie_title)
     scrapper = rt(
         movie_title = googled_movie_url,
@@ -69,4 +75,4 @@ def main(data: request_body):
     return summary_dict 
 
 if __name__ == '__main__':
-    uvicorn.run(app)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload = True)

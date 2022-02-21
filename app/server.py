@@ -32,7 +32,7 @@ payload = {
 }
 
 
-response=requests.post('http://127.0.0.1:8000/predict', json=payload)
+response=requests.post('http://localhost:7000/predict', json=payload)
 decoded_output=response.content.decode('UTF-8')
 output=json.loads(decoded_output)
 print(output)
