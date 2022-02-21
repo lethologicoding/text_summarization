@@ -25,8 +25,11 @@ def run():
     st.write("")
     st.write("")
     movie_title = st.text_input("Enter Movie")
-    reviewer = st.selectbox("Enter Reviewer" , ["user", "critic"])
+    reviewer = st.selectbox("Enter Reviewer" , ["Audience"] ) # , "Critics"])
     scraping_limit = st.slider('Select amount of recent reviews to examine', 10, 100, step = 10)
+
+    if reviewer == 'Audience':
+        reviewer = 'user'
 
     Data = {
     "movie_title": movie_title, 

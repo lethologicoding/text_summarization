@@ -31,7 +31,7 @@ class Data(BaseModel):
 @app.get("/")
 @app.get("/home")
 def read_home():
-    return {'message': 'sys is good baby'}
+    return {'message': 'system running successfully'}
 
 @app.post('/predict')
 def main(data: Data):
@@ -47,7 +47,6 @@ def main(data: Data):
     Returns 
         dictionary summaries and relevant data (num reviews, rating, summary)
     '''
-    # return data.movie_title, data.scraping_limit, data.reviewer
     googled_movie_url = google_movie(data.movie_title)
     scrapper = rt(
         movie_title = googled_movie_url,
