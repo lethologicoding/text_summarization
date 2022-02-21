@@ -5,6 +5,7 @@ import pandas as pd
 
 import streamlit as st
 
+APP_URL = "http://127.0.0.1:8000/predict"
 
 # Adding arguments to customize CLI 
 argparser = argparse.ArgumentParser(description='Process hyper-parameters')
@@ -32,7 +33,7 @@ payload = {
 }
 
 
-response=requests.post('http://localhost:7000/predict', json=payload)
+response=requests.post(APP_URL, json=payload)
 decoded_output=response.content.decode('UTF-8')
 output=json.loads(decoded_output)
 print(output)
