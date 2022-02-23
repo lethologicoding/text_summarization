@@ -5,7 +5,7 @@ This project builds an app that quickly extracts and summarizes the different ki
 If you're wondering what movie to watch, you can use this tool to see what people are generally thinking, feeling, and saying about the movie to help make a decision. 
 
 ## Here is a screenshot of what the streamlit application looks like 
-![text_summarization_streamlit_app](https://user-images.githubusercontent.com/96853846/155017603-9638ee22-8e68-4f8f-bc77-27ccbdfe2362.PNG)
+![text_summarization_streamlit_app](https://user-images.githubusercontent.com/96853846/155259498-fa4b8b68-2ba9-40d3-9688-2ea2d14b22a5.PNG)
 
 
 ### folder directory: 
