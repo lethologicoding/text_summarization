@@ -3,6 +3,7 @@ import pandas as pd
 import umap
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
+import hdbscan
 from sklearn import metrics
 
 def run_umap(data = None):
@@ -51,7 +52,7 @@ def get_optimal_gmm(df=pd.DataFrame, cluster_limit=20):
     best_num = np.argmax(coeffs)+cluster_start
     return best_num, best_coeff
 
-def run_gmm(num_clusters=int, data=None): 
+def run_gmm(num_clusters=int, data=None) -> list: 
     '''
     Runs GMM clustering algo on n clusters
     '''
@@ -67,7 +68,7 @@ def run_gmm(num_clusters=int, data=None):
     return labels
 
 
-def run_kmeans(k=int, data=None): 
+def run_kmeans(k=int, data=None) -> list: 
     '''
     Runs kmeans clustering algo on k clusters
     '''
@@ -76,3 +77,8 @@ def run_kmeans(k=int, data=None):
     labels = clusters.labels_
     sil_coeff = metrics.silhouette_score(data, labels,metric='euclidean')
     return labels
+
+def run_hdbscan(data = None) -> list:
+    cluster_algo = hdbscan.HDBSCAN(min_cluster_size=10, gen_min_span_tree=True)
+    cluster_algo.fit(data)
+    return cluster_algo.labels_.tolist()

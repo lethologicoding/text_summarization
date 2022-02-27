@@ -57,10 +57,12 @@ def main(data: Data):
     print('Now searching for topics in reviews...')
     sentence_embeddings = TextEmbeddings.get_bert_sentence_embeddings(df['review'])
     umap_embeddings = DimReduction.run_umap(data=sentence_embeddings)
-    best_num, best_coeff = DimReduction.get_optimal_gmm(df=umap_embeddings)
-    labels = DimReduction.run_gmm(num_clusters=best_num, data=umap_embeddings)
+    # best_num, best_coeff = DimReduction.get_optimal_gmm(df=umap_embeddings)
+    labels = DimReduction.run_hdbscan(data=umap_embeddings)
     df['cluster_label'] = labels
-    print(f'Number of topics found in reviews: {best_num}')
+    df = df[df['cluster_label'] >= 0] #NOTE: -1 labels mean the obs weren't matched to a cluster label
+    num_clusters = df['cluster_label'].nunique()
+    print(f'Number of topics found in reviews: {num_clusters}')
     loop_order = df['cluster_label'].value_counts().index.to_list() # to start with most predominant topics
     summary_dict = {}
     for i in loop_order:

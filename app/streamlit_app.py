@@ -21,7 +21,13 @@ def run():
     st.write("")
     st.write("""Please enter a **movie title**, 
             kind of **reviewer type** you'd like to gist of, 
-            and **how many** recent reviews to examine""" )
+            and **how many** recent reviews to examine. 
+            Once all info is entered, press **"Predict"** . """ )
+    st.write("")
+    st.write("")
+    st.write("""While the tool is running, it is scraping rotten tomatoes for movie reviews, 
+                automatically finding the number of topics/clusters to those reviews, 
+                then summarizing the reviews by the found topics/clusters.""") 
     st.write("")
     st.write("")
     movie_title = st.text_input("Enter Movie")
@@ -50,6 +56,7 @@ def run():
         st.table(df.style.format({"% of reviews": '{:.0f}',
                                      "Avg. Rating": '{:.2f}'
                 }))
+
 
 if __name__ == '__main__':
     run()
